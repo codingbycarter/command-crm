@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Investor Deals — South Jersey & Philadelphia</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script src="assets/config.js"></script>
+</head>
+<body class="site">
+<header>
+  <strong id="brand" style="font-family:Georgia,serif;font-size:20px"></strong>
+  <span class="spacer"></span>
+  <a href="#deals" style="margin-right:16px">Current deals</a>
+  <a href="#join" class="btn primary" style="text-decoration:none">Join the buyers list</a>
+</header>
+
+<div class="hero">
+  <h1 id="tagline"></h1>
+  <p>We source off-market residential properties and offer them to a private list of cash buyers, landlords and rehab investors. Every deal comes with the numbers we used and a written disclosure of our interest in it.</p>
+  <p id="markets" style="font-size:14px;opacity:.8"></p>
+</div>
+
+<section id="deals">
+  <h2>Current deals</h2>
+  <p class="muted">Figures are estimates. Buyers should do their own due diligence, inspection and valuation.</p>
+  <div id="dealGrid" class="grid g3" style="margin-top:16px"></div>
+</section>
+
+<section id="join" style="background:var(--panel);border-top:1px solid var(--line)">
+  <div style="max-width:720px">
+    <h2>Join the private buyers list</h2>
+    <p class="muted">Tell us your buy box and we'll send deals that fit. We only email; you can unsubscribe at any time.</p>
+    <form id="buyerForm" class="grid g2">
+      <div><label>Full name *</label><input name="name" required></div>
+      <div><label>Email *</label><input name="email" type="email" required></div>
+      <div><label>Phone</label><input name="phone"></div>
+      <div><label>Company / LLC</label><input name="company"></div>
+      <div><label>Target markets</label><input name="markets" placeholder="e.g. North Philly, Camden"></div>
+      <div><label>Strategy</label>
+        <select name="strategy"><option>Fix & flip</option><option>Buy & hold rental</option><option>BRRRR</option><option>New construction / land</option><option>Multifamily</option></select></div>
+      <div><label>Price range</label><input name="priceRange" placeholder="$50k–$200k"></div>
+      <div><label>Funding</label>
+        <select name="funding"><option>Cash</option><option>Hard money</option><option>Private lender</option><option>Conventional</option></select></div>
+      <div style="grid-column:1/-1">
+        <label style="display:flex;gap:8px;align-items:flex-start;color:var(--ink)"><input type="checkbox" name="consent" required style="width:auto;margin-top:4px">
+        I agree to receive deal emails. I understand I can unsubscribe at any time.</label>
+      </div>
+      <div style="grid-column:1/-1"><button class="primary" type="submit">Join the list</button> <span id="formMsg" class="muted"></span></div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <p id="license"></p>
+  <p>Disclosure: we typically hold an equitable interest (a contract to purchase) in properties we advertise and may assign that interest for a fee. Nothing on this site is an offer to sell securities or investment advice. Equal Housing Opportunity.</p>
+</footer>
+
+<script>
+const C = window.SITE_CONFIG;
+const $ = s => document.querySelector(s);
+const money = n => n==null||n==="" ? "—" : "$"+Number(n).toLocaleString();
+$("#brand").textContent = C.brand;
+$("#tagline").textContent = C.tagline;
+$("#markets").textContent = "Markets: " + C.markets.join(" · ");
+$("#license").textContent = C.licenseDisclosure;
+document.title = C.brand + " — Investor Deals";
+
+fetch("deals.json?" + Date.now()).then(r => r.json()).then(deals => {
+  const g = $("#dealGrid");
+  if (!deals.length) { g.innerHTML = '<p class="muted">No deals posted right now. Join the list to get the next one first.</p>'; return; }
+  g.innerHTML = deals.map(d => `
+    <div class="card">
+      ${d.sample ? '<span class="pill sample">Sample data</span>' : `<span class="pill ok">${d.status||"Available"}</span>`}
+      <h3 style="margin-top:8px">${d.title}</h3>
+      <div class="muted">${d.area} · ${d.type||""}</div>
+      <div class="muted">${d.beds||"?"} bd · ${d.baths||"?"} ba · ${d.sqft? d.sqft.toLocaleString()+" sqft":""}</div>
+      <table style="margin-top:10px">
+        <tr><td>Asking</td><td><b>${money(d.askingPrice)}</b></td></tr>
+        <tr><td>Est. ARV</td><td>${money(d.arv)}</td></tr>
+        <tr><td>Est. repairs</td><td>${money(d.repairEstimate)}</td></tr>
+      </table>
+      ${d.notes ? `<p class="muted" style="font-size:12px">${d.notes}</p>`:""}
+    </div>`).join("");
+}).catch(() => $("#dealGrid").innerHTML = '<p class="muted">Deals could not be loaded.</p>');
+
+$("#buyerForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = $("#formMsg");
+  if (!C.formEndpoint) { msg.textContent = "Sign-ups aren't open yet. Please check back soon."; return; }
+  const data = Object.fromEntries(new FormData(e.target));
+  data.submittedAt = new Date().toISOString();
+  msg.textContent = "Sending…";
+  try {
+    const r = await fetch(C.formEndpoint, {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body: JSON.stringify(data)});
+    if (!r.ok) throw new Error(r.status);
+    e.target.reset(); msg.textContent = "You're on the list. Thank you!";
+  } catch (err) { msg.textContent = "Something went wrong and your details were not sent. Please try again."; }
+});
+</script>
+</body>
+</html>
