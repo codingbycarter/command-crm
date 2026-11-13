@@ -1,0 +1,15 @@
+[
+  {
+    "id": "sample-1",
+    "sample": true,
+    "title": "SAMPLE — 3BR rowhome, Kensington",
+    "area": "Philadelphia, PA",
+    "type": "Single-family / rowhome",
+    "beds": 3, "baths": 1, "sqft": 1120,
+    "askingPrice": 89000,
+    "arv": 185000,
+    "repairEstimate": 55000,
+    "status": "Sample listing",
+    "notes": "This is placeholder data to show the layout. Replace with real deals exported from the CRM."
+  }
+]
