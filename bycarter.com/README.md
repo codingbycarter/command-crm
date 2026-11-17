@@ -1,23 +1,32 @@
-# bycarter.com — Philadelphia Real Estate CRM
+# bycarter.com
 
-The whole site is one file: `index.html` (no server and no passwords or keys in the code).
+| Page | Path |
+|---|---|
+| Landing page | `index.html` |
+| Philadelphia real estate CRM | `crm/` |
+| Rich Girl Problemz Digital Solutions | `rgp/` |
+| Credit Repair | `credit/` |
+
+All pages are static HTML. There's no server, and the code holds no passwords or keys.
 
 ## Go live on GitHub Pages (free)
-1. On github.com (account **codingbycarter**), click **+ → New repository**.
-   - Name: `bycarter.com`
-   - Visibility: **Public** (required for free Pages)
-2. Click **uploading an existing file**, drag in `index.html` and `README.md`, and click **Commit changes**.
-3. Go to **Settings → Pages**. Set Source to **Deploy from a branch**, branch **main**, folder **/ (root)**, then click **Save**.
-4. In 1–2 minutes the site is live at **https://codingbycarter.github.io/bycarter.com/**
+1. In this repo, go to **Settings → Pages**.
+2. Set Source to **Deploy from a branch**.
+3. Pick the branch, choose the folder, and click **Save**.
 
-### Use the bycarter.com domain (optional)
-1. In **Settings → Pages → Custom domain**, enter `bycarter.com` and click **Save**.
-2. At your domain provider, add these DNS records:
-   - Four **A** records for `@` pointing to `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`
-   - One **CNAME** record for `www` pointing to `codingbycarter.github.io`
-3. When the DNS check passes, tick **Enforce HTTPS**.
+The site is public on the internet.
 
-## Using it
-- Log in as **Carter** with PIN `2424` (Admin's PIN is `1234`). Change both PINs right away in Settings.
-- Data is saved only in the browser of the device you use. Nothing is stored on GitHub.
-- Back up your data weekly with **Settings → Export backup**, and use **Restore backup** on a new device.
+To use the bycarter.com domain:
+1. Go to **Settings → Pages → Custom domain** and enter `bycarter.com`.
+2. At your domain provider, add four **A** records for `@`:
+   - `185.199.108.153`
+   - `185.199.109.153`
+   - `185.199.110.153`
+   - `185.199.111.153`
+3. Also add a **CNAME** record: `www` → `codingbycarter.github.io`.
+4. Turn on **Enforce HTTPS**.
+
+## CRM notes
+- Log in as **Carter** (PIN `2424`) or **Admin** (PIN `1234`). Change both PINs in Settings.
+- Data is saved only in the browser on each device.
+- Use **Settings → Export backup** weekly.
